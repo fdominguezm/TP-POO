@@ -11,9 +11,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaintPane extends BorderPane {
 
@@ -43,30 +47,20 @@ public class PaintPane extends BorderPane {
     public PaintPane(CanvasState canvasState, StatusPane statusPane) {
         this.canvasState = canvasState;
         this.statusPane = statusPane;
-        ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton};
-        ToggleGroup tools = new ToggleGroup();
-        for (ToggleButton tool : toolsArr) {
-            tool.setMinWidth(90);
-            tool.setToggleGroup(tools);
-            tool.setCursor(Cursor.HAND);
-        }
-        VBox buttonsBox = new VBox(10);
-        buttonsBox.getChildren().addAll(toolsArr);
-        buttonsBox.setPadding(new Insets(5));
-        buttonsBox.setStyle("-fx-background-color: #999");
-        buttonsBox.setPrefWidth(100);
+
+        VBox buttonsBox = setToggleButtons();
+
         gc.setLineWidth(1);
+
         canvas.setOnMousePressed(event -> {
             startPoint = new Point(event.getX(), event.getY());
         });
         canvas.setOnMouseReleased(event -> {
             Point endPoint = new Point(event.getX(), event.getY());
-            if(startPoint == null) {
+            if(startPoint == null || (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())) {
                 return ;
             }
-            if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-                return ;
-            }
+
             Figure newFigure = null;
             if(rectangleButton.isSelected()) {
                 newFigure = new Rectangle(startPoint, endPoint);
@@ -83,37 +77,17 @@ public class PaintPane extends BorderPane {
         });
         canvas.setOnMouseMoved(event -> {
             Point eventPoint = new Point(event.getX(), event.getY());
-            boolean found = false;
             StringBuilder label = new StringBuilder();
-            for(Figure figure : canvasState.figures()) {
-                if(figureBelongs(figure, eventPoint)) {
-                    found = true;
-                    label.append(figure.toString());
-                }
-            }
-            if(found) {
-                statusPane.updateStatus(label.toString());
-            } else {
+            if(findFigure(event,label) == null) {
                 statusPane.updateStatus(eventPoint.toString());
             }
         });
 
         canvas.setOnMouseClicked(event -> {
             if(selectionButton.isSelected()) {
-                Point eventPoint = new Point(event.getX(), event.getY());
-                boolean found = false;
                 StringBuilder label = new StringBuilder("Se seleccionó: ");
-                for (Figure figure : canvasState.figures()) {
-                    if(figureBelongs(figure, eventPoint)) {
-                        found = true;
-                        selectedFigure = figure;
-                        label.append(figure.toString());
-                    }
-                }
-                if (found) {
-                    statusPane.updateStatus(label.toString());
-                } else {
-                    selectedFigure = null;
+                selectedFigure = findFigure(event,label);
+                if(selectedFigure == null) {
                     statusPane.updateStatus("Ninguna figura encontrada");
                 }
                 redrawCanvas();
@@ -132,7 +106,7 @@ public class PaintPane extends BorderPane {
         setRight(canvas);
     }
 
-    void redrawCanvas() {
+    private void redrawCanvas() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for(Figure figure : canvasState.figures()) {
             if(figure == selectedFigure) {
@@ -156,8 +130,36 @@ public class PaintPane extends BorderPane {
         }
     }
 
-    boolean figureBelongs(Figure figure, Point eventPoint) {
+    private boolean figureBelongs(Figure figure, Point eventPoint) {
         return figure.belongs(eventPoint);
+    }
+
+    private Figure findFigure(MouseEvent event,StringBuilder label){
+        Point eventPoint = new Point(event.getX(), event.getY());
+        for (Figure figure : canvasState.figures()) {
+            if(figureBelongs(figure, eventPoint)) {
+                label.append(figure.toString());
+                statusPane.updateStatus(label.toString());
+                return figure;
+            }
+        }
+        return null;
+    }
+
+    private VBox setToggleButtons(){
+        ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton};
+        ToggleGroup tools = new ToggleGroup();
+        for (ToggleButton tool : toolsArr) {
+            tool.setMinWidth(90);
+            tool.setToggleGroup(tools);
+            tool.setCursor(Cursor.HAND);
+        }
+        VBox buttonsBox = new VBox(10);
+        buttonsBox.getChildren().addAll(toolsArr);
+        buttonsBox.setPadding(new Insets(5));
+        buttonsBox.setStyle("-fx-background-color: #999");
+        buttonsBox.setPrefWidth(100);
+        return buttonsBox;
     }
 
 }
