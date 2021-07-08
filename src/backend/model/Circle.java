@@ -4,6 +4,7 @@ public class Circle extends Figure {
 
     public Circle(Point topLeft, Point bottomRight) {
         super(topLeft, bottomRight);
+        getBottomRight().setX(getTopLeft().getX() + getXDiameter());
         this.setXDiameter(getYDiameter());
     }
 
