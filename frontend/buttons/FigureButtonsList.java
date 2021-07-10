@@ -8,7 +8,6 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FigureButtonsList extends ArrayList<FigureButtons>{
 

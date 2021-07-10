@@ -7,8 +7,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleButton;
 
-import java.util.Map;
-
 public class CircleButton extends FigureButtons{
     private Circle circle = null;
 

@@ -3,13 +3,12 @@ package frontend.buttons;
 import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
+import frontend.buttons.FigureButtons;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleButton;
 
-import java.util.Map;
-
-public class RectangleButton extends FigureButtons{
+public class RectangleButton extends FigureButtons {
     private Rectangle rectangle = null;
 
     public RectangleButton(String name) {
