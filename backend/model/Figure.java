@@ -22,12 +22,9 @@ public abstract class Figure {
                 Double.compare(p.getY(), getTopLeft().getY()) >= 0 && Double.compare(p.getY(), getBottomRight().getY()) <= 0;
     }
 
-    public void setXDiameter(double xDiameter) {
-        this.xDiameter = xDiameter;
-    }
-
-    public void setYDiameter(double yDiameter) {
-        this.yDiameter = yDiameter;
+    public boolean belongs(Point p1, Point p2) {
+        return Double.compare(p1.getX(), topLeft.getX()) < 0 && Double.compare(p1.getY(), topLeft.getY()) > 0 &&
+                Double.compare(p2.getX(), bottomRight.getX()) > 0 && Double.compare(p2.getY(), bottomRight.getY()) < 0;
     }
 
     public double getXDiameter() {

@@ -1,16 +1,15 @@
 package backend.model;
 
-public class Circle extends Figure {
+public class Circle extends Ellipse {
 
-    public Circle(Point topLeft, Point bottomRight) {
-        super(topLeft, bottomRight);
-        getBottomRight().setX(getTopLeft().getX() + getXDiameter());
-        this.setXDiameter(getYDiameter());
+    public Circle(Point centerPoint, Point bottomRight, double radius) {
+        super(new Point(centerPoint.getX() - radius, centerPoint.getY() + radius), bottomRight);
+        this.centerPoint = centerPoint;
     }
 
     @Override
     public String toString() {
-        return String.format("Círculo [Centro: %s, Radio: %.2f]", this.getTopLeft(), circleRatio());
+        return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, circleRatio());
     }
 
     private double circleRatio() {
