@@ -5,6 +5,9 @@ import backend.model.Circle;
 import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
+import frontend.buttons.CircleButton;
+import frontend.buttons.FigureButtons;
+import frontend.buttons.RectangleButton;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -16,8 +19,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
 
 public class PaintPane extends BorderPane {
 
@@ -32,14 +35,14 @@ public class PaintPane extends BorderPane {
 
     // Botones Barra Izquierda
     ToggleButton selectionButton = new ToggleButton("Seleccionar");
-    ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-    ToggleButton circleButton = new ToggleButton("Círculo");
+    FigureButtons rectangleButton = new RectangleButton("Rectángulo");
+    FigureButtons circleButton = new CircleButton("Círculo");
 
     // Dibujar una figura
     Point startPoint;
 
     // Seleccionar una figura
-    Figure selectedFigure;
+    List<Figure> selectedFigures;
 
     // StatusBar
     StatusPane statusPane;
@@ -56,12 +59,34 @@ public class PaintPane extends BorderPane {
             startPoint = new Point(event.getX(), event.getY());
         });
         canvas.setOnMouseReleased(event -> {
+
+            /* //NUEVO RELEASED
+            Point endPoint = new Point(event.getX(), event.getY());
+            if(startPoint == null){
+                return;
+            }
+
+            Figure newFigure = null;
+
+            if(selectButton.isSelected()){
+                    selectAllFigures(startPoint, endPoint, selectedFigures);
+            }else if(figureButtons.isSelected()){
+                    newFigure = figureButtons.createFigure(startPoint, endPoint);
+                    canvasState.addFigure(newFigure); // En addFigure chequear distinto de null
+            }
+
+            startPoint = null;
+            redrawCanvas();
+
+             */
+
             Point endPoint = new Point(event.getX(), event.getY());
             if(startPoint == null || (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())) {
                 return ;
             }
 
             Figure newFigure = null;
+
             if(rectangleButton.isSelected()) {
                 newFigure = new Rectangle(startPoint, endPoint);
             }
@@ -75,6 +100,8 @@ public class PaintPane extends BorderPane {
             startPoint = null;
             redrawCanvas();
         });
+
+
         canvas.setOnMouseMoved(event -> {
             Point eventPoint = new Point(event.getX(), event.getY());
             StringBuilder label = new StringBuilder();
@@ -86,8 +113,8 @@ public class PaintPane extends BorderPane {
         canvas.setOnMouseClicked(event -> {
             if(selectionButton.isSelected()) {
                 StringBuilder label = new StringBuilder("Se seleccionó: ");
-                selectedFigure = findFigure(event,label);
-                if(selectedFigure == null) {
+                selectedFigures = findFigure(event,label);
+                if(selectedFigures == null) {
                     statusPane.updateStatus("Ninguna figura encontrada");
                 }
                 redrawCanvas();
@@ -109,7 +136,7 @@ public class PaintPane extends BorderPane {
     private void redrawCanvas() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for(Figure figure : canvasState.figures()) {
-            if(figure == selectedFigure) {
+            if(figure == selectedFigures) {
                 gc.setStroke(Color.RED);
             } else {
                 gc.setStroke(lineColor);
