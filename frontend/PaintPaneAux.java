@@ -3,11 +3,14 @@ package frontend;
 import backend.model.Figure;
 import backend.model.Point;
 import frontend.buttons.FigureButtonsList;
+import frontend.formattedFigures.FillableFigures;
 import frontend.formattedFigures.FormattedFigure;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
@@ -16,11 +19,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PaintPaneAux  extends BorderPane {
-    // BackEnd
-    FormattedFigureList canvasState = new FormattedFigureList();;
 
     // Canvas y relacionados
     Canvas canvas = new Canvas(800, 600);
@@ -30,20 +32,29 @@ public class PaintPaneAux  extends BorderPane {
 
     ToggleButton selectionButton = new ToggleButton("Seleccionar");
     FigureButtonsList figureButtons = new FigureButtonsList();
+    ColorPicker figureColor = new ColorPicker();
+    ColorPicker borderColor = new ColorPicker();
+    ToggleButton deleteButton = new ToggleButton("Delete");
+    ToggleButton undoButton = new ToggleButton("Undo");
+    ToggleButton redoButton = new ToggleButton("Redo");
+    ToggleButton toBackButton = new ToggleButton("Back");
+    ToggleButton toFrontButton = new ToggleButton("Front");
+    Slider borderThickness = new Slider();
 
     // Dibujar una figura
     Point startPoint;
 
+    // BackEnd
+    List<FormattedFigureList> canvasState = new ArrayList<>();
+    int dim=0;
     // Seleccionar una figura
     FormattedFigureList selectedFigures = new FormattedFigureList();
 
     // StatusBar
     StatusPane statusPane;
 
-    List<FormattedFigureList> deletedFigures =  new ArrayList<>();
-
-    public PaintPaneAux(FormattedFigureList canvasState, StatusPane statusPane){
-        this.canvasState = canvasState;
+    public PaintPaneAux(StatusPane statusPane){
+        canvasState.add(new FormattedFigureList());
         this.statusPane = statusPane;
 
         VBox buttonsBox = setToggleButtons();
@@ -68,7 +79,7 @@ public class PaintPaneAux  extends BorderPane {
                     selectedFigures = selectAllFigures(startPoint, endPoint); //selectedFigures.removeAll(selectedFigures) falta meter esto en este emtodo
             }else if(figureButtons.isSelected()){
                     newFigure = figureButtons.createFigure(startPoint, endPoint);
-                    canvasState.addFigure(newFigure); // En addFigure chequear distinto de null
+                    canvasState.get(dim).addFigure(newFigure); // En addFigure chequear distinto de null
             }
 
             startPoint = null;
@@ -103,6 +114,33 @@ public class PaintPaneAux  extends BorderPane {
             }
         });
 
+        figureColor.setOnAction(event -> {
+            for (FormattedFigure f: selectedFigures) {
+                f.setColor(figureColor.getValue());
+            }
+        });
+        borderColor.setOnAction(event -> {
+            for (FormattedFigure f: selectedFigures) {
+                f.setBorderColor(figureColor.getValue());
+            }
+        });
+        deleteButton.setOnAction(event -> {
+            canvasState.get(dim).removeAll(selectedFigures);
+        });
+        undoButton.setOnAction(event -> {
+
+        });
+        redoButton.setOnAction(event -> {
+            //hay que ver
+        });
+        toBackButton.setOnAction(event -> {
+            canvasState.get(dim).removeAll(selectedFigures);
+            canvasState.get(dim).addAll(0,selectedFigures);
+        });
+        toFrontButton.setOnAction(event -> {
+            canvasState.get(dim).removeAll(selectedFigures);
+            canvasState.get(dim).addAll(selectedFigures);
+        });
 
 
         setLeft(buttonsBox);
@@ -112,7 +150,7 @@ public class PaintPaneAux  extends BorderPane {
     private void redrawCanvas() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (FormattedFigure figure : canvasState.figures()) {
+        for (FormattedFigure figure : canvasState.get(dim).figures()) {
             if (selectedFigures.contains(figure)) {
                 gc.setStroke(Color.RED);
             } else {
@@ -126,19 +164,20 @@ public class PaintPaneAux  extends BorderPane {
 
     private FormattedFigureList selectAllFigures(Point startPoint, Point endPoint){
         selectedFigures.removeAll(selectedFigures);
-        for (FormattedFigure f: canvasState.figures()) {
+        for (FormattedFigure f: canvasState.get(dim)) {
             if(f.getFigure().belongs(startPoint,endPoint)){
                 selectedFigures.addFigure(f);
             }
         }
+        return selectedFigures;
     }
-
-
 
     private VBox setToggleButtons(){
         List<ToggleButton> toolsArr = new ArrayList<>();
+        ToggleButton[] aux = {deleteButton, undoButton, redoButton, toBackButton, toFrontButton};
         toolsArr.add(selectionButton);
         toolsArr.addAll(figureButtons);
+        toolsArr.addAll(Arrays.asList(aux));
         ToggleGroup tools = new ToggleGroup();
         for (ToggleButton tool : toolsArr) {
             tool.setMinWidth(90);
@@ -147,6 +186,9 @@ public class PaintPaneAux  extends BorderPane {
         }
         VBox buttonsBox = new VBox(10);
         buttonsBox.getChildren().addAll(toolsArr);
+        buttonsBox.getChildren().add(figureColor);
+        buttonsBox.getChildren().add(borderColor);
+        buttonsBox.getChildren().add(borderThickness);
         buttonsBox.setPadding(new Insets(5));
         buttonsBox.setStyle("-fx-background-color: #999");
         buttonsBox.setPrefWidth(100);
@@ -155,7 +197,7 @@ public class PaintPaneAux  extends BorderPane {
 
     private void findFigure(MouseEvent event, StringBuilder label, String s){
         Point eventPoint = new Point(event.getX(), event.getY());
-        for (FormattedFigure figure : canvasState.figures()) {
+        for (FormattedFigure figure : canvasState.get(dim).figures()) {
             if(figureBelongs(figure.getFigure(), eventPoint)) {
                 selectedFigures.addFigure(figure);
                 label.append(figure.toString());
