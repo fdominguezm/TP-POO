@@ -1,14 +1,11 @@
 package frontend.buttons;
 
-import backend.model.Circle;
-import backend.model.Figure;
 import backend.model.Point;
-import javafx.scene.canvas.Canvas;
+import frontend.formattedFigures.FormattedCircle;
+import frontend.formattedFigures.FormattedFigure;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
 
 public class CircleButton extends FigureButtons{
-    private Circle circle = null;
 
     public CircleButton(String name){
         super(name);
@@ -16,15 +13,8 @@ public class CircleButton extends FigureButtons{
 
 
     @Override
-    public Figure createFigure(Point topLeft, Point bottomRight) {
-        circle = new Circle(topLeft, bottomRight);
-        return circle;
-    }
-
-    @Override
-    public GraphicsContext redrawCanvas(GraphicsContext gc) {
-        gc.fillOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
-        gc.strokeOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
-        return gc;
+    public FormattedFigure createFigure(Point startPoint, Point endPoint) {
+        double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
+        return new FormattedCircle(startPoint, endPoint, circleRadius);
     }
 }
