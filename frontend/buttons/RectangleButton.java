@@ -1,12 +1,11 @@
 package frontend.buttons;
 
-import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
-import frontend.buttons.FigureButtons;
-import javafx.scene.canvas.Canvas;
+import frontend.formattedFigures.FormattedCircle;
+import frontend.formattedFigures.FormattedFigure;
+import frontend.formattedFigures.FormattedRectangle;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
 
 public class RectangleButton extends FigureButtons {
     private Rectangle rectangle = null;
@@ -16,18 +15,8 @@ public class RectangleButton extends FigureButtons {
     }
 
     @Override
-    public Figure createFigure(Point topLeft, Point bottomRight) {
-        rectangle = new Rectangle(topLeft, bottomRight);
-        return rectangle;
-    }
-
-    @Override
-    public GraphicsContext redrawCanvas(GraphicsContext gc) {
-        gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
-        gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
-        return gc;
+    public FormattedFigure createFigure(Point topLeft, Point bottomRight) {
+        return new FormattedRectangle(topLeft, bottomRight);
     }
 
 }

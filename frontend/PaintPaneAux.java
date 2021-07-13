@@ -1,9 +1,9 @@
 package frontend;
 
-import backend.CanvasState;
 import backend.model.Figure;
 import backend.model.Point;
 import frontend.buttons.FigureButtonsList;
+import frontend.formattedFigures.FormattedFigure;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class PaintPaneAux  extends BorderPane {
     // BackEnd
-    CanvasState canvasState;
+    FormattedFigureList canvasState = new FormattedFigureList();;
 
     // Canvas y relacionados
     Canvas canvas = new Canvas(800, 600);
@@ -35,12 +35,14 @@ public class PaintPaneAux  extends BorderPane {
     Point startPoint;
 
     // Seleccionar una figura
-    List<Figure> selectedFigures;
+    FormattedFigureList selectedFigures = new FormattedFigureList();
 
     // StatusBar
     StatusPane statusPane;
 
-    public PaintPaneAux(CanvasState canvasState, StatusPane statusPane){
+    List<FormattedFigureList> deletedFigures =  new ArrayList<>();
+
+    public PaintPaneAux(FormattedFigureList canvasState, StatusPane statusPane){
         this.canvasState = canvasState;
         this.statusPane = statusPane;
 
@@ -60,10 +62,10 @@ public class PaintPaneAux  extends BorderPane {
                 return;
             }
 
-            Figure newFigure = null;
+            FormattedFigure newFigure = null;
 
             if(selectionButton.isSelected()){
-                    selectAllFigures(startPoint, endPoint, selectedFigures); //selectedFigures.removeAll(selectedFigures) falta meter esto en este emtodo
+                    selectedFigures = selectAllFigures(startPoint, endPoint); //selectedFigures.removeAll(selectedFigures) falta meter esto en este emtodo
             }else if(figureButtons.isSelected()){
                     newFigure = figureButtons.createFigure(startPoint, endPoint);
                     canvasState.addFigure(newFigure); // En addFigure chequear distinto de null
@@ -93,12 +95,15 @@ public class PaintPaneAux  extends BorderPane {
                 Point eventPoint = new Point(event.getX(), event.getY());
                 double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
                 double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-                for (Figure f: selectedFigures) {
-                    f.move(diffX,diffY);
+
+                for (FormattedFigure f: selectedFigures) {
+                    f.getFigure().move(diffX,diffY);
                 }
                 redrawCanvas();
             }
         });
+
+
 
         setLeft(buttonsBox);
         setRight(canvas);
@@ -107,14 +112,24 @@ public class PaintPaneAux  extends BorderPane {
     private void redrawCanvas() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (Figure figure : canvasState.figures()) {
+        for (FormattedFigure figure : canvasState.figures()) {
             if (selectedFigures.contains(figure)) {
                 gc.setStroke(Color.RED);
             } else {
                 gc.setStroke(lineColor);
             }
             gc.setFill(fillColor);
-            gc = figureButtons.redrawCanvas(gc);
+
+            gc = selectedFigures.get(0).redrawCanvas(gc);
+        }
+    }
+
+    private FormattedFigureList selectAllFigures(Point startPoint, Point endPoint){
+        selectedFigures.removeAll(selectedFigures);
+        for (FormattedFigure f: canvasState.figures()) {
+            if(f.getFigure().belongs(startPoint,endPoint)){
+                selectedFigures.addFigure(f);
+            }
         }
     }
 
@@ -140,9 +155,9 @@ public class PaintPaneAux  extends BorderPane {
 
     private void findFigure(MouseEvent event, StringBuilder label, String s){
         Point eventPoint = new Point(event.getX(), event.getY());
-        for (Figure figure : canvasState.figures()) {
-            if(figureBelongs(figure, eventPoint)) {
-                selectedFigures.add(figure);
+        for (FormattedFigure figure : canvasState.figures()) {
+            if(figureBelongs(figure.getFigure(), eventPoint)) {
+                selectedFigures.addFigure(figure);
                 label.append(figure.toString());
                 statusPane.updateStatus(label.toString());
                 return;
