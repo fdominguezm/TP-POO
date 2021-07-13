@@ -2,8 +2,8 @@ package backend.model;
 
 public class Circle extends Ellipse {
 
-    public Circle(Point centerPoint, Point bottomRight, double radius) {
-        super(new Point(centerPoint.getX() - radius, centerPoint.getY() + radius), bottomRight);
+    public Circle(Point centerPoint, double radius) {
+        super(new Point(centerPoint.getX() - radius, centerPoint.getY() - radius), new Point(centerPoint.getX() + radius, centerPoint.getY() + radius));
         this.centerPoint = centerPoint;
     }
 
@@ -13,6 +13,6 @@ public class Circle extends Ellipse {
     }
 
     private double circleRatio() {
-        return getXDiameter()/2;
+        return getYDiameter()/2;
     }
 }

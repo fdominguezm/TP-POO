@@ -15,16 +15,22 @@ public abstract class Figure {
     public void move(double x, double y) {
         topLeft.setX(topLeft.getX() + x);
         topLeft.setY(topLeft.getY() + y);
+        bottomRight.setX(bottomRight.getX() + x);
+        bottomRight.setY(bottomRight.getY() + y);
     }
 
     public boolean belongs(Point p) {
-        return Double.compare(p.getX(), getTopLeft().getX()) >= 0 && Double.compare(p.getX(), getBottomRight().getX()) <= 0 &&
-                Double.compare(p.getY(), getTopLeft().getY()) >= 0 && Double.compare(p.getY(), getBottomRight().getY()) <= 0;
+        return Double.compare(p.getX(), getTopLeft().getX()) >= 0
+                && Double.compare(p.getX(), getBottomRight().getX()) <= 0
+                && Double.compare(p.getY(), getTopLeft().getY()) >= 0
+                && Double.compare(p.getY(), getBottomRight().getY()) <= 0;
     }
 
     public boolean belongs(Point p1, Point p2) {
-        return Double.compare(p1.getX(), topLeft.getX()) < 0 && Double.compare(p1.getY(), topLeft.getY()) > 0 &&
-                Double.compare(p2.getX(), bottomRight.getX()) > 0 && Double.compare(p2.getY(), bottomRight.getY()) < 0;
+        return Double.compare(p1.getX(), topLeft.getX()) < 0
+                && Double.compare(p1.getY(), topLeft.getY()) < 0
+                && Double.compare(p2.getX(), bottomRight.getX()) > 0
+                && Double.compare(p2.getY(), bottomRight.getY()) > 0;
     }
 
     public double getXDiameter() {
