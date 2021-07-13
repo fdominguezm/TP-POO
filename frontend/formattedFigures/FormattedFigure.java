@@ -7,16 +7,25 @@ import javafx.scene.paint.Color;
 
 public abstract class FormattedFigure {
     protected Figure figure;
-    protected Color color;
+    protected Color borderColor;
+    protected int borderThickness;
 
     public abstract GraphicsContext redrawCanvas(GraphicsContext gc);
 
-    public void setColor(Color c) {
-        color = c;
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
     }
 
-    public Color getColor() {
-        return color;
+    public void setBorderThickness(int borderThickness) {
+        this.borderThickness = borderThickness;
+    }
+
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public int getBorderThickness() {
+        return borderThickness;
     }
 
     public Figure getFigure() {

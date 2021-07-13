@@ -8,10 +8,9 @@ import frontend.formattedFigures.FormattedRectangle;
 import javafx.scene.canvas.GraphicsContext;
 
 public class RectangleButton extends FigureButtons {
-    private Rectangle rectangle = null;
 
-    public RectangleButton(String name) {
-        super(name);
+    public RectangleButton() {
+        super("Rectangulo");
     }
 
     @Override

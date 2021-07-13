@@ -7,8 +7,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class CircleButton extends FigureButtons{
 
-    public CircleButton(String name){
-        super(name);
+    public CircleButton(){
+        super("Circulo");
     }
 
 

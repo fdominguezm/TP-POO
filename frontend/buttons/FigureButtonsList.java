@@ -15,8 +15,11 @@ public class FigureButtonsList extends ArrayList<FigureButtons>{
 
     public FigureButtonsList(){
         super();
-        this.add(new RectangleButton("Rectángulo"));
-        this.add(new CircleButton("Círculo"));
+        this.add(new RectangleButton());
+        this.add(new CircleButton());
+        this.add(new SquareButton());
+        this.add(new EllipseButton());
+        this.add(new LineButton());
     }
 
     public boolean isSelected(){
