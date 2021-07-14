@@ -12,13 +12,6 @@ public abstract class Figure {
         yDiameter = bottomRight.getY() - topLeft.getY();
     }
 
-    public void move(double x, double y) {
-        topLeft.setX(topLeft.getX() + x);
-        topLeft.setY(topLeft.getY() + y);
-        bottomRight.setX(bottomRight.getX() + x);
-        bottomRight.setY(bottomRight.getY() + y);
-    }
-
     public boolean belongs(Point p) {
         return Double.compare(p.getX(), getTopLeft().getX()) >= 0
                 && Double.compare(p.getX(), getBottomRight().getX()) <= 0
