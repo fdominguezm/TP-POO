@@ -3,7 +3,6 @@ package frontend;
 import backend.model.Figure;
 import backend.model.Point;
 import frontend.buttons.FigureButtonsList;
-import frontend.formattedFigures.FillableFigures;
 import frontend.formattedFigures.FormattedFigure;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;

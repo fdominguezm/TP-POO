@@ -9,6 +9,7 @@ import frontend.formattedFigures.FormattedFigure;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.paint.Color;
 
 import java.util.Map;
 
@@ -18,6 +19,6 @@ public abstract class FigureButtons extends ToggleButton{
         super(name);
     }
 
-    public abstract FormattedFigure createFigure(Point topLeft, Point bottomRight);
+    public abstract FormattedFigure createFigure(Point startPoint, Point endPoint, Color fillColor, Color lineColor, double defaultThickness);
 
 }

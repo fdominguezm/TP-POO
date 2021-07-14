@@ -5,30 +5,49 @@ import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public abstract class FormattedFigure {
-    protected Figure figure;
-    protected Color borderColor;
-    protected int borderThickness;
+public abstract class  FormattedFigure {
+    private Figure figure;
+    private Color color;
+    private Color borderColor;
+    private double borderThickness;
+
+    public FormattedFigure(Figure figure, Color color, Color borderColor, double borderThickness) {
+        this.figure = figure;
+        this.borderColor = borderColor;
+        this.borderThickness = borderThickness;
+        this.color = color;
+    }
 
     public abstract GraphicsContext redrawCanvas(GraphicsContext gc);
 
-    public void setBorderColor(Color borderColor) {
-        this.borderColor = borderColor;
+    public FormattedFigure setBorderColor(Color borderColor) {
+        return newFigure(this.figure, this.color, borderColor, this.borderThickness);
     }
 
-    public void setBorderThickness(int borderThickness) {
-        this.borderThickness = borderThickness;
+    public FormattedFigure setBorderThickness(double borderThickness) {
+        return newFigure(this.figure, this.color, this.borderColor, borderThickness);
+    }
+
+    public FormattedFigure setColor(Color color) {
+        return newFigure(this.figure, color, this.borderColor, this.borderThickness);
     }
 
     public Color getBorderColor() {
         return borderColor;
     }
 
-    public int getBorderThickness() {
+    public double getBorderThickness() {
         return borderThickness;
     }
 
     public Figure getFigure() {
         return figure;
     }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public abstract FormattedFigure newFigure(Figure figure, Color color, Color borderColor, double borderThickness);
+
 }

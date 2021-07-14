@@ -3,7 +3,9 @@ package frontend.buttons;
 import backend.model.Point;
 import frontend.formattedFigures.FormattedCircle;
 import frontend.formattedFigures.FormattedFigure;
+import frontend.formattedFigures.FormattedLine;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class CircleButton extends FigureButtons{
 
@@ -11,10 +13,9 @@ public class CircleButton extends FigureButtons{
         super("Circulo");
     }
 
-
     @Override
-    public FormattedFigure createFigure(Point startPoint, Point endPoint) {
+    public FormattedFigure createFigure(Point startPoint, Point endPoint, Color fillColor, Color lineColor, double defaultThickness) {
         double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-        return new FormattedCircle(startPoint, endPoint, circleRadius);
+        return new FormattedCircle(startPoint, circleRadius, fillColor, lineColor, defaultThickness);
     }
 }

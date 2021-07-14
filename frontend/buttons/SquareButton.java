@@ -2,7 +2,9 @@ package frontend.buttons;
 
 import backend.model.Point;
 import frontend.formattedFigures.FormattedFigure;
+import frontend.formattedFigures.FormattedLine;
 import frontend.formattedFigures.FormattedSquare;
+import javafx.scene.paint.Color;
 
 public class SquareButton extends FigureButtons{
     public SquareButton() {
@@ -10,7 +12,7 @@ public class SquareButton extends FigureButtons{
     }
 
     @Override
-    public FormattedFigure createFigure(Point topLeft, Point bottomRight) {
-        return new FormattedSquare(topLeft, bottomRight);
+    public FormattedFigure createFigure(Point startPoint, Point endPoint, Color fillColor, Color lineColor, double defaultThickness) {
+        return new FormattedSquare(startPoint, endPoint, fillColor, lineColor, defaultThickness);
     }
 }
