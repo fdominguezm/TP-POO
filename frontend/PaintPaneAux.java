@@ -70,6 +70,8 @@ public class PaintPaneAux  extends BorderPane {
             if(startPoint == null){
                 return;
             }
+            newCanvasState();
+            selectedFigures.removeAll(selectedFigures);
             if(selectionButton.isSelected()){
                     selectedFigures = selectAllFigures(startPoint, endPoint); //selectedFigures.removeAll(selectedFigures) falta meter esto en este emtodo
             }else if(figureButtons.isSelected()){
@@ -164,15 +166,14 @@ public class PaintPaneAux  extends BorderPane {
     private void redrawCanvas() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (FormattedFigure figure : canvasState.get(dim).figures()) {
+        for (FormattedFigure figure : canvasState.get(dim)) {
             if (selectedFigures.contains(figure)) {
                 gc.setStroke(Color.RED);
             } else {
                 gc.setStroke(lineColor);
             }
             gc.setFill(fillColor);
-
-            gc = selectedFigures.get(0).redrawCanvas(gc);
+            figure.redrawCanvas(gc);
         }
     }
 
