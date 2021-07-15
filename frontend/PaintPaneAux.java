@@ -181,8 +181,10 @@ public class PaintPaneAux  extends BorderPane {
         for (int i = dim+1; i<canvasState.size(); i++) {
             canvasState.remove(i);
         }
-        canvasState.add(canvasState.get(dim++));
-        canvasState.get(dim).removeAll(selectedFigures);
+        FormattedFigureList aux = new FormattedFigureList();
+        aux.removeAll(selectedFigures);
+        aux.addAll(canvasState.get(dim++));
+        canvasState.add(aux);
     }
 
     private FormattedFigureList selectAllFigures(Point startPoint, Point endPoint){
