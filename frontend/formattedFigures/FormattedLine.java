@@ -14,9 +14,13 @@ public class FormattedLine extends FormattedFigure{
 
     @Override
     public GraphicsContext redrawCanvas(GraphicsContext gc) {
-        gc.setStroke(getBorderColor());
+        if (isSelected()) {
+            gc.setStroke(Color.RED);
+        }else{
+            gc.setStroke(getBorderColor());
+        }
         gc.setLineWidth(getBorderThickness());
-        gc.strokeLine(getFigure().getTopLeft().getX() , getFigure().getTopLeft().getY(), getFigure().getBottomRight().getX(), getFigure().getBottomRight().getY());
+        gc.strokeLine(getFigure().getTopLeft().getX(), getFigure().getTopLeft().getY(), getFigure().getBottomRight().getX(), getFigure().getBottomRight().getY());
         return gc;
     }
 

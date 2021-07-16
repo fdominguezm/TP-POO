@@ -12,6 +12,7 @@ public abstract class  FormattedFigure {
     private Color color;
     private Color borderColor;
     private double borderThickness;
+    private boolean isSelected = false;
 
     public FormattedFigure(Figure figure, Color color, Color borderColor, double borderThickness) {
         this.figure = figure;
@@ -57,5 +58,22 @@ public abstract class  FormattedFigure {
     }
 
     public abstract FormattedFigure newFigure(Figure figure, Color color, Color borderColor, double borderThickness);
+
+    public boolean isSelected(){
+        return isSelected;
+    }
+
+    public void select(){
+        isSelected = true;
+    }
+
+    public void unselect(){
+        isSelected = false;
+    }
+
+    @Override
+    public  String toString(){
+        return figure.toString();
+    }
 
 }

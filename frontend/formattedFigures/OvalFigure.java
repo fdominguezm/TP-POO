@@ -12,8 +12,12 @@ public abstract class OvalFigure extends FormattedFigure{
 
     @Override
     public GraphicsContext redrawCanvas(GraphicsContext gc) {
+        if (isSelected()) {
+            gc.setStroke(Color.RED);
+        }else{
+            gc.setStroke(getBorderColor());
+        }
         gc.setFill(getColor());
-        gc.setStroke(getBorderColor());
         gc.setLineWidth(getBorderThickness());
         gc.fillOval(getFigure().getTopLeft().getX() , getFigure().getTopLeft().getY(), getFigure().getXDiameter(), getFigure().getYDiameter());
         gc.strokeOval(getFigure().getTopLeft().getX() , getFigure().getTopLeft().getY(), getFigure().getXDiameter(), getFigure().getYDiameter());

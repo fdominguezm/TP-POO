@@ -12,8 +12,12 @@ public abstract class RectFigure extends FormattedFigure{
 
     @Override
     public GraphicsContext redrawCanvas(GraphicsContext gc) {
+        if (isSelected()) {
+            gc.setStroke(Color.RED);
+        }else{
+            gc.setStroke(getBorderColor());
+        }
         gc.setFill(getColor());
-        gc.setStroke(getBorderColor());
         gc.setLineWidth(getBorderThickness());
         gc.fillRect(getFigure().getTopLeft().getX() , getFigure().getTopLeft().getY(), getFigure().getXDiameter(), getFigure().getYDiameter());
         gc.strokeRect(getFigure().getTopLeft().getX() , getFigure().getTopLeft().getY(), getFigure().getXDiameter(), getFigure().getYDiameter());
