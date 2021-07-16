@@ -41,13 +41,13 @@ public class FigureTester {
         assert(square.belongs(p2, p3));
         assert(ellipse.belongs(p2, p3));
         assert(circle.belongs(p2, p3));
-
+/*
         p1.setX(1.0);
         p1.setY(2.0);
-
+*/
         assert(p1.getX() == 1.0);
         assert(p1.getY() == 2.0);
-
+/*
         System.out.println("Moviendo las figuras en x = 4, y = 7 coordenadas.");
         System.out.println();
         System.out.println(rectangle + " movido a ");
@@ -70,6 +70,6 @@ public class FigureTester {
         line.move(4.0, 7.0);
         System.out.println(line);
         System.out.println();
-
+*/
     }
 }

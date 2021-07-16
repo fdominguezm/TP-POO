@@ -109,7 +109,7 @@ public class PaintPaneAux  extends BorderPane {
                 newCanvasState();
                 for (FormattedFigure f: canvasState.get(dim)) {
                     if (f.isSelected()) {
-                        canvasState.get(dim).add(f.move(diffX, diffY));
+                        f.move(diffX, diffY);
                     }
                 }
                 redrawCanvas();

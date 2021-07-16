@@ -26,6 +26,12 @@ public abstract class Figure {
                 && Double.compare(p2.getY(), bottomRight.getY()) > 0;
     }
 
+    public void move(double x, double y) {
+        topLeft.move(x, y);
+        bottomRight.move(x, y);
+    }
+
+
     public double getXDiameter() {
         return xDiameter;
     }

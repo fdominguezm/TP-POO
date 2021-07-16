@@ -34,11 +34,8 @@ public abstract class  FormattedFigure {
     public FormattedFigure setColor(Color color) {
         return newFigure(this.figure, color, this.borderColor, this.borderThickness);
     }
-    public FormattedFigure move(double x, double y) {
-        Point tpl = new Point(getFigure().getTopLeft().getX() + x,getFigure().getTopLeft().getY() + y);
-        Point btr = new Point(getFigure().getBottomRight().getX() + x,getFigure().getBottomRight().getY() + y);
-        Figure aux = new Rectangle(tpl,btr);
-        return newFigure(aux, getColor(), getBorderColor(), getBorderThickness());
+    public void move(double x, double y) {
+        figure.move(x, y);
     }
 
     public Color getBorderColor() {
