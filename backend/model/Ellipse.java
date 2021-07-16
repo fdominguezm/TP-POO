@@ -11,8 +11,8 @@ public class Ellipse extends Figure {
 
     @Override
     public boolean belongs(Point p) {
-        return (Math.pow((p.getX() - centerPoint.getX()), 2) / Math.pow(this.getXDiameter(), 2))
-                + (Math.pow((p.getY() - centerPoint.getX()), 2) / Math.pow(this.getYDiameter(), 2)) <= 1;
+        return (Math.pow((p.getX() - centerPoint.getX()), 2) / Math.pow(this.getXDiameter()/2, 2))
+                + (Math.pow((p.getY() - centerPoint.getY()), 2) / Math.pow(this.getYDiameter()/2, 2)) <= 1;
     }
 
     @Override
