@@ -9,10 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -33,14 +30,14 @@ public class PaintPaneAux  extends BorderPane {
 
     ToggleButton selectionButton = new ToggleButton("Seleccionar");
     FigureButtonsList figureButtons = new FigureButtonsList();
-    ColorPicker figureColor = new ColorPicker();
-    ColorPicker borderColor = new ColorPicker();
-    ToggleButton deleteButton = new ToggleButton("Delete");
-    ToggleButton undoButton = new ToggleButton("Undo");
-    ToggleButton redoButton = new ToggleButton("Redo");
-    ToggleButton toBackButton = new ToggleButton("Back");
-    ToggleButton toFrontButton = new ToggleButton("Front");
-    Slider borderThickness = new Slider();
+    ColorPicker figureColor = new ColorPicker(fillColor);
+    ColorPicker borderColor = new ColorPicker(lineColor);
+    ToggleButton deleteButton = new ToggleButton("Borrar");
+    ToggleButton undoButton = new ToggleButton("Deshacer");
+    ToggleButton redoButton = new ToggleButton("Rehacer");
+    ToggleButton toBackButton = new ToggleButton("Al fondo");
+    ToggleButton toFrontButton = new ToggleButton("Al frente");
+    Slider borderThickness = new Slider(1,10,1);
 
     // Dibujar una figura
     Point startPoint;
@@ -217,10 +214,19 @@ public class PaintPaneAux  extends BorderPane {
             tool.setToggleGroup(tools);
             tool.setCursor(Cursor.HAND);
         }
+        borderThickness.setShowTickLabels(true);
+        borderThickness.setShowTickMarks(true);
+
         VBox buttonsBox = new VBox(10);
         buttonsBox.getChildren().addAll(toolsArr);
+        Label fillText = new Label("Color de Relleno");
+        buttonsBox.getChildren().add(fillText);
         buttonsBox.getChildren().add(figureColor);
+        Label borderText = new Label("Color del Borde");
+        buttonsBox.getChildren().add(borderText);
         buttonsBox.getChildren().add(borderColor);
+        Label thicknessText = new Label("Grosor del Borde");
+        buttonsBox.getChildren().add(thicknessText);
         buttonsBox.getChildren().add(borderThickness);
         buttonsBox.setPadding(new Insets(5));
         buttonsBox.setStyle("-fx-background-color: #999");
