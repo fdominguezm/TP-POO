@@ -15,7 +15,7 @@ public class CircleButton extends FigureButtons{
 
     @Override
     public FormattedFigure createFigure(Point startPoint, Point endPoint, Color fillColor, Color lineColor, double defaultThickness) {
-        double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
+        double circleRadius = Math.sqrt(Math.pow(endPoint.getX() - startPoint.getX(),2) + Math.pow(endPoint.getY() - startPoint.getY(),2));
         return new FormattedCircle(startPoint, circleRadius, fillColor, lineColor, defaultThickness);
     }
 }

@@ -27,6 +27,10 @@ public abstract class  FormattedFigure {
         return newFigure(this.figure, this.color, borderColor, this.borderThickness);
     }
 
+    public boolean belongs(Point p1, Point p2){
+        return figure.belongs(p1,p2);
+    }
+
     public FormattedFigure setBorderThickness(double borderThickness) {
         return newFigure(this.figure, this.color, this.borderColor, borderThickness);
     }

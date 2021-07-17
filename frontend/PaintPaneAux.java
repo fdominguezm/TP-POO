@@ -5,6 +5,8 @@ import backend.model.Point;
 import frontend.buttons.FigureButtonsList;
 import frontend.formattedFigures.FormattedFigure;
 import frontend.formattedFigures.FormattedFigureList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -37,7 +39,7 @@ public class PaintPaneAux  extends BorderPane {
     ToggleButton redoButton = new ToggleButton("Rehacer");
     ToggleButton toBackButton = new ToggleButton("Al fondo");
     ToggleButton toFrontButton = new ToggleButton("Al frente");
-    Slider borderThickness = new Slider(1,10,1);
+    Slider borderThickness = new Slider(1,50,1);
 
     // Dibujar una figura
     Point startPoint;
@@ -68,14 +70,14 @@ public class PaintPaneAux  extends BorderPane {
             if(startPoint == null){
                 return;
             }
-            newCanvasState();
 
             if(selectionButton.isSelected()){
-                    selectAllFigures(startPoint, endPoint); //selectedFigures.removeAll(selectedFigures) falta meter esto en este emtodo
+                    selectAllFigures(startPoint, endPoint);
             }else if(figureButtons.isSelected()){
+                    newCanvasState();
                     FormattedFigure newFigure = figureButtons.createFigure(startPoint, endPoint, fillColor, lineColor, defaultThickness);
                     canvasState.get(dim).unselect();
-                    canvasState.get(dim).addFigure(newFigure); // En addFigure chequear distinto de null
+                    canvasState.get(dim).addFigure(newFigure);
             }
 
             startPoint = null;
@@ -91,8 +93,11 @@ public class PaintPaneAux  extends BorderPane {
         canvas.setOnMouseClicked(event -> {
             if(selectionButton.isSelected()) {
                 StringBuilder label = new StringBuilder("Se seleccionó: ");
-                canvasState.get(dim).unselect();
-                findFigure(event,label,"Ninguna figura encontrada");
+                //canvasState.get(dim).unselect();
+                FormattedFigure f = findFigure(event,label,"Ninguna figura encontrada");
+                if (f != null){
+                    f.select();
+                }
                 redrawCanvas();
             }
         });
@@ -103,7 +108,6 @@ public class PaintPaneAux  extends BorderPane {
                 double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
                 double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 
-                newCanvasState();
                 for (FormattedFigure f: canvasState.get(dim)) {
                     if (f.isSelected()) {
                         f.move(diffX, diffY);
@@ -129,6 +133,7 @@ public class PaintPaneAux  extends BorderPane {
             for (FormattedFigure f: canvasState.get(dim)) {
                 if (f.isSelected()) {
                     f.unselect();
+                    canvasState.get(dim).remove(f);
                     canvasState.get(dim).addFigure(f.setBorderColor(borderColor.getValue()));
                 }
             }
@@ -153,7 +158,9 @@ public class PaintPaneAux  extends BorderPane {
         });
         toBackButton.setOnAction(event -> {
             newCanvasState();
-            canvasState.get(dim).addAll(0,canvasState.get(dim).selectedFigures());
+            FormattedFigureList aux = canvasState.get(dim).selectedFigures();
+            canvasState.get(dim).removeAll(aux);
+            canvasState.get(dim).addAll(0,aux);
             redrawCanvas();
         });
         toFrontButton.setOnAction(event -> {
@@ -161,16 +168,50 @@ public class PaintPaneAux  extends BorderPane {
             canvasState.get(dim).addAll(canvasState.get(dim).selectedFigures());
             redrawCanvas();
         });
-        borderThickness.setOnMouseDragged(event-> {
+
+
+        borderThickness.setShowTickLabels(true);
+        borderThickness.setShowTickMarks(true);
+        borderThickness.setBlockIncrement(5);
+
+        //Linking the transformation to the slider
+        borderThickness.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<?extends Number> observable, Number oldValue, Number newValue){
+                newCanvasState();
+                for (FormattedFigure f : canvasState.get(dim)) {
+                    if (f.isSelected()) {
+                        canvasState.get(dim).remove(f);
+                        canvasState.get(dim).add(f.setBorderThickness(borderThickness.getValue()));
+                    }
+                }
+                redrawCanvas();
+            }
+        });
+
+        /*borderThickness.setOnMouseDragged(event-> {
+
             newCanvasState();
             for (FormattedFigure f : canvasState.get(dim)) {
                 if (f.isSelected()) {
-                    f.unselect();
+                    canvasState.get(dim).remove(f);
                     canvasState.get(dim).add(f.setBorderThickness(borderThickness.getValue()));
                 }
             }
             redrawCanvas();
         });
+        borderThickness.setOnMouseClicked(event->{
+            if(borderThickness.isValueChanging()){
+                newCanvasState();
+                for (FormattedFigure f : canvasState.get(dim)) {
+                    if (f.isSelected()) {
+                        canvasState.get(dim).remove(f);
+                        canvasState.get(dim).add(f.setBorderThickness(borderThickness.getValue()));
+                    }
+                }
+                redrawCanvas();
+                canvasState.get(dim).unselect();
+            }
+        });*/
 
         setLeft(buttonsBox);
         setRight(canvas);
@@ -196,7 +237,7 @@ public class PaintPaneAux  extends BorderPane {
     private void selectAllFigures(Point startPoint, Point endPoint){
 
         for (FormattedFigure f: canvasState.get(dim)) {
-            if(f.getFigure().belongs(startPoint,endPoint)){
+            if(f.belongs(startPoint,endPoint)){
                 f.select();
             }
         }
@@ -234,23 +275,25 @@ public class PaintPaneAux  extends BorderPane {
         return buttonsBox;
     }
 
-    private void findFigure(MouseEvent event, StringBuilder label, String s){
+    private FormattedFigure findFigure(MouseEvent event, StringBuilder label, String s){
         Point eventPoint = new Point(event.getX(), event.getY());
+        FormattedFigure f = null;
 
         for (FormattedFigure figure : canvasState.get(dim)) {
             if(figureBelongs(figure.getFigure(), eventPoint)) {
-                figure.select();
+                f =figure;
                 label.append(figure.toString());
                 statusPane.updateStatus(label.toString());
-                return;
             }
         }
 
         if(canvasState.get(dim).selectedFigures().isEmpty()) {
             statusPane.updateStatus(s);
         }
+        return f;
     }
 
+    //ESTE METODO CREO Q ESTA AL PEDO
     private boolean figureBelongs(Figure figure, Point eventPoint) {
         return figure.belongs(eventPoint);
     }
