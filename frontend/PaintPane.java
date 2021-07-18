@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PaintPaneAux  extends BorderPane {
+public class PaintPane extends BorderPane {
 
     // Canvas y relacionados
     Canvas canvas = new Canvas(800, 600);
@@ -49,7 +49,7 @@ public class PaintPaneAux  extends BorderPane {
 
     StatusPane statusPane;;
 
-    public PaintPaneAux(StatusPane statusPane){
+    public PaintPane(StatusPane statusPane){
         this.statusPane = statusPane;
         VBox buttonsBox = setToggleButtons();
         gc.setLineWidth(defaultThickness);
@@ -63,11 +63,11 @@ public class PaintPaneAux  extends BorderPane {
             if(startPoint == null){
                 return;
             }
-            if (figureButtons.isSelected()) {
-                canvasState.addFigure(figureButtons.createFigure(startPoint, endPoint, fillColor, lineColor, defaultThickness));
-            } else if(canvasState.state().selectedFigures().isEmpty()) {
-                selectAllFigures (startPoint, endPoint);
 
+            if (figureButtons.isSelected()) {
+                canvasState.addFigure(figureButtons.createFigure(startPoint, endPoint, figureColor.getValue(), borderColor.getValue(), borderThickness.getValue()));
+            } else if(selectionButton.isSelected()){
+                selectAllFigures (startPoint, endPoint);
             }
 
             startPoint = null;
@@ -86,6 +86,7 @@ public class PaintPaneAux  extends BorderPane {
                 //canvasState.get(dim).unselect();
                 FormattedFigure f = findFigure(event,label,"Ninguna figura encontrada");
                 if (f != null){
+                    canvasState.state().unselect();
                     f.select();
                 }
                 redrawCanvas();
@@ -153,13 +154,17 @@ public class PaintPaneAux  extends BorderPane {
                     aux.add(f.setBorderThickness(borderThickness.getValue()));
                 }
             }
-            canvasState.state().addAll(aux);
             redrawCanvas();
-
+            for (FormattedFigure f: aux) {
+                f.redrawCanvas(gc);
+            }
         };
 
         borderThickness.setOnMouseDragged(sliderEvent);
-        borderThickness.setOnMouseClicked(sliderEvent);
+        borderThickness.setOnMouseReleased(event -> {
+            canvasState.apply(f->f.setBorderThickness(borderThickness.getValue()));
+            redrawCanvas();
+        });
 
         setLeft(buttonsBox);
         setRight(canvas);
@@ -178,6 +183,8 @@ public class PaintPaneAux  extends BorderPane {
         for (FormattedFigure f: canvasState.state()) {
             if(f.belongs(startPoint,endPoint)){
                 f.select();
+            }else{
+                f.unselect();
             }
         }
     }
@@ -226,7 +233,7 @@ public class PaintPaneAux  extends BorderPane {
             }
         }
 
-        if(canvasState.state().selectedFigures().isEmpty()) {
+        if(f == null) {
             statusPane.updateStatus(s);
         }
         return f;

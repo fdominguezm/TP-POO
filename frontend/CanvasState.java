@@ -1,5 +1,6 @@
 package frontend;
 
+import backend.model.Point;
 import frontend.formattedFigures.FormattedFigure;
 import frontend.formattedFigures.FormattedFigureList;
 
@@ -16,13 +17,15 @@ public class CanvasState {
 
     public void undo () {
         state().unselect();
-        if (dim>0)
+        if (dim>0) {
             dim--;
+        }
     }
     public void redo () {
         state().unselect();
-        if (dim<state.size()-1)
+        if (dim<state.size()-1) {
             dim++;
+        }
     }
 
     public void addFigure (FormattedFigure figure) {
@@ -49,7 +52,7 @@ public class CanvasState {
     }
 
     private void copyList () {
-        for (int i=dim+1; i< state.size(); i++) {
+        for (int i=state.size()-1; i>dim; i--) {
             state.remove(i);
         }
         FormattedFigureList aux = new FormattedFigureList();
