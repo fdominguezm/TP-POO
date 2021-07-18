@@ -5,8 +5,6 @@ import backend.model.Point;
 import frontend.buttons.FigureButtonsList;
 import frontend.formattedFigures.FormattedFigure;
 import frontend.formattedFigures.FormattedFigureList;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -47,7 +45,10 @@ public class PaintPane extends BorderPane {
 
     CanvasState canvasState = new CanvasState();
 
-    StatusPane statusPane;;
+    StatusPane statusPane;
+
+    //Para el setOnMouseClicked
+    boolean justClicked = false;
 
     public PaintPane(StatusPane statusPane){
         this.statusPane = statusPane;
@@ -83,13 +84,17 @@ public class PaintPane extends BorderPane {
         canvas.setOnMouseClicked(event -> {
             if(selectionButton.isSelected()) {
                 StringBuilder label = new StringBuilder("Se seleccionó: ");
-                //canvasState.get(dim).unselect();
                 FormattedFigure f = findFigure(event,label,"Ninguna figura encontrada");
-                if (f != null){
-                    canvasState.state().unselect();
-                    f.select();
+                if (!justClicked) {
+                    if (f != null) {
+                        justClicked = true;
+                        canvasState.state().unselect();
+                        f.select();
+                        redrawCanvas();
+                    }
+                    return;
                 }
-                redrawCanvas();
+                justClicked = false;
             }
         });
 
@@ -239,7 +244,6 @@ public class PaintPane extends BorderPane {
         return f;
     }
 
-    //ESTE METODO CREO Q ESTA AL PEDO
     private boolean figureBelongs(Figure figure, Point eventPoint) {
         return figure.belongs(eventPoint);
     }

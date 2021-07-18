@@ -3,7 +3,6 @@ package frontend.formattedFigures;
 import backend.model.Circle;
 import backend.model.Figure;
 import backend.model.Point;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class FormattedCircle extends OvalFigure{

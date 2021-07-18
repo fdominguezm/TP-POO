@@ -1,7 +1,7 @@
 package frontend.formattedFigures;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class FormattedFigureList extends ArrayList<FormattedFigure> {
 

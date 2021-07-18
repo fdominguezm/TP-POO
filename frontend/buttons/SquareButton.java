@@ -2,7 +2,6 @@ package frontend.buttons;
 
 import backend.model.Point;
 import frontend.formattedFigures.FormattedFigure;
-import frontend.formattedFigures.FormattedLine;
 import frontend.formattedFigures.FormattedSquare;
 import javafx.scene.paint.Color;
 

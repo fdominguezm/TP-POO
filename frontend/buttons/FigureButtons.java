@@ -1,17 +1,9 @@
 package frontend.buttons;
 
-import backend.model.Circle;
-import backend.model.Figure;
 import backend.model.Point;
-import backend.model.Rectangle;
-import frontend.formattedFigures.FormattedCircle;
 import frontend.formattedFigures.FormattedFigure;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
-
-import java.util.Map;
 
 public abstract class FigureButtons extends ToggleButton{
 

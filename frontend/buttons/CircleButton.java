@@ -3,8 +3,6 @@ package frontend.buttons;
 import backend.model.Point;
 import frontend.formattedFigures.FormattedCircle;
 import frontend.formattedFigures.FormattedFigure;
-import frontend.formattedFigures.FormattedLine;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class CircleButton extends FigureButtons{

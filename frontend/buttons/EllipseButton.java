@@ -3,7 +3,6 @@ package frontend.buttons;
 import backend.model.Point;
 import frontend.formattedFigures.FormattedEllipse;
 import frontend.formattedFigures.FormattedFigure;
-import frontend.formattedFigures.FormattedRectangle;
 import javafx.scene.paint.Color;
 
 public class EllipseButton extends FigureButtons{

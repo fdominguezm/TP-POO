@@ -2,9 +2,7 @@ package frontend.formattedFigures;
 
 import backend.model.Figure;
 import backend.model.Point;
-import backend.model.Rectangle;
 import backend.model.Square;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class FormattedSquare extends RectFigure {
