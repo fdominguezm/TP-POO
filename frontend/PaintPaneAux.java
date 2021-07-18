@@ -7,6 +7,7 @@ import frontend.formattedFigures.FormattedFigure;
 import frontend.formattedFigures.FormattedFigureList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -175,18 +176,20 @@ public class PaintPaneAux  extends BorderPane {
         borderThickness.setBlockIncrement(5);
 
         //Linking the transformation to the slider
-        borderThickness.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<?extends Number> observable, Number oldValue, Number newValue){
-                newCanvasState();
-                for (FormattedFigure f : canvasState.get(dim)) {
-                    if (f.isSelected()) {
-                        canvasState.get(dim).remove(f);
-                        canvasState.get(dim).add(f.setBorderThickness(borderThickness.getValue()));
-                    }
+        EventHandler<MouseEvent> sliderEvent = mouseEvent -> {
+            FormattedFigureList aux = new FormattedFigureList();
+            for (FormattedFigure f : canvasState.get(dim)) {
+                if (f.isSelected()) {
+                    aux.add(f.setBorderThickness(borderThickness.getValue()));
                 }
-                redrawCanvas();
             }
-        });
+            canvasState.get(dim).addAll(aux);
+            redrawCanvas();
+
+        };
+
+        borderThickness.setOnMouseDragged(sliderEvent);
+        borderThickness.setOnMouseClicked(sliderEvent);
 
         /*borderThickness.setOnMouseDragged(event-> {
 
