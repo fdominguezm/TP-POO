@@ -1,9 +1,7 @@
-package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import backend.model.Point;
-import org.junit.Test;
 import org.junit.jupiter.api.*;
 
 public class PointTest {
